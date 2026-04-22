@@ -558,15 +558,12 @@ def targets():
             o.president,
             o.website,
             o.email,
-            COALESCE(f.bus_capacity_est, 0) as cap_est,
-            COALESCE(f.parking_area_m2, 0) as parking_m2,
             COALESCE(s.size_score, 0) as size_score,
             COALESCE(s.independence_score, 1.0) as independence_score,
             COALESCE(s.clarity_score, 0) as clarity_score,
             COALESCE(s.ma_fit_score, 0) as fit_score,
             COALESCE(s.rank, 0) as rank
         FROM operators o
-        LEFT JOIN facility f ON o.id = f.operator_id
         LEFT JOIN scores s ON o.id = s.operator_id
         WHERE o.group_id IS NULL
           AND COALESCE(s.ma_fit_score, 0) >= ?

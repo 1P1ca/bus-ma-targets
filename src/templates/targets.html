@@ -45,9 +45,7 @@
       <th style="width: 30%;">Entreprise</th>
       <th style="width: 12%;">Ville</th>
       <th style="width: 10%; text-align: center;">Président</th>
-      <th style="width: 8%; text-align: center;">Parc (bus)</th>
-      <th style="width: 8%; text-align: center;">Terrain (m²)</th>
-      <th style="width: 27%;">Score M&A</th>
+      <th style="width: 35%;">Score M&A</th>
     </tr>
   </thead>
   <tbody>
@@ -62,8 +60,6 @@
       </td>
       <td>{{ row['city'] }}</td>
       <td style="font-size: 12px;">{{ row['president'] or '—' }}</td>
-      <td style="text-align: right; font-variant-numeric: tabular-nums;">{{ row['cap_est'] or '—' }}</td>
-      <td style="text-align: right; font-variant-numeric: tabular-nums;">{{ row['parking_m2']|int if row['parking_m2'] else '—' }}</td>
       <td>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <div style="flex: 1;">
