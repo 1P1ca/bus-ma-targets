@@ -111,16 +111,21 @@
   </form>
 </section>
 
-<!-- Installations -->
+<!-- Localisation -->
 <section id="installations" class="card">
-  <h2>Localisation</h2>
+  <h2>📍 Localisation</h2>
   {% if op['lat'] and op['lng'] %}
-    <dl class="kv">
-      <dt>Latitude / Longitude</dt>
-      <dd>{{ op['lat'] }}, {{ op['lng'] }}</dd>
-      <dt>Coordonnées</dt>
-      <dd><a href="https://maps.google.com/?q={{ op['lat'] }},{{ op['lng'] }}" target="_blank">Voir sur Google Maps ↗</a></dd>
-    </dl>
+    <div style="display: flex; gap: 2rem; align-items: flex-start;">
+      <dl class="kv" style="flex: 1;">
+        <dt>Latitude / Longitude</dt>
+        <dd>{{ op['lat'] }}, {{ op['lng'] }}</dd>
+      </dl>
+      <div style="flex: 1; text-align: center;">
+        <a href="https://maps.google.com/?q={{ op['lat'] }},{{ op['lng'] }}" target="_blank" style="display: inline-block; padding: 0.75rem 1.5rem; background: #d8534a; color: white; border-radius: 4px; text-decoration: none; font-weight: 600;">
+          🗺️ Voir sur Google Maps
+        </a>
+      </div>
+    </div>
   {% else %}
     <p class="muted">Coordonnées géographiques non disponibles.</p>
   {% endif %}
