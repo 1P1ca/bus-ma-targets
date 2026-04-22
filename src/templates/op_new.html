@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Nouvelle fiche{% endblock %}
+{% block content %}
+<h1>Créer une nouvelle fiche d'entreprise</h1>
+<p class="muted">Utilisez ce formulaire pour ajouter un opérateur qui ne figure pas dans la liste FTA.</p>
+
+<form method="post" class="card">
+  <div class="grid2">
+    <label>Nom <input name="name" required></label>
+    <label>Dénomination légale <input name="legal_name"></label>
+    <label>NEQ <input name="neq" pattern="\d{10}" maxlength="10"></label>
+    <label>Adresse <input name="address"></label>
+    <label>Ville <input name="city"></label>
+    <label>Code postal <input name="postal"></label>
+    <label>Téléphone <input name="phone"></label>
+    <label>Courriel <input name="email" type="email"></label>
+    <label>Site Internet <input name="website"></label>
+    <label>Président <input name="president"></label>
+    <label>Statut
+      <select name="status">
+        <option value="">—</option>
+        {% for v,lbl in STATUT_CHOICES %}<option value="{{v}}">{{lbl}}</option>{% endfor %}
+      </select>
+    </label>
+  </div>
+  <label>Notes initiales <textarea name="notes" rows="3"></textarea></label>
+  <div class="row">
+    <label>Auteur <input name="author" value="{{ author }}" required></label>
+    <button type="submit">Créer la fiche</button>
+    <a class="btn-ghost" href="{{ url_for('index') }}">Annuler</a>
+  </div>
+</form>
+{% endblock %}

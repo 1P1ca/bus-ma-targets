@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr-CA">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>M&A Qualification — Quebec Bus Operators</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        header {
+            background: linear-gradient(135deg, #B14506 0%, #8B3404 100%);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        header p { font-size: 1.1rem; opacity: 0.9; }
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .card h2 { color: #B14506; margin-bottom: 1rem; }
+        .card p { color: #666; margin-bottom: 1rem; }
+        
+        .btn {
+            display: inline-block;
+            background: #B14506;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            border-radius: 4px;
+            margin-top: 1rem;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #8B3404; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .stat {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .stat-value { font-size: 2rem; font-weight: bold; color: #B14506; }
+        .stat-label { font-size: 0.9rem; color: #666; text-transform: uppercase; margin-top: 0.5rem; }
+        
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8rem; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎯 M&A Qualification System</h1>
+        <p>Quebec Bus Operators | 485 Evaluated | 30 Ranked Targets</p>
+    </header>
+    
+    <div class="container">
+        <section class="cards">
+            <div class="card">
+                <h2>📊 Interactive Dashboard</h2>
+                <p>Real-time ranking of top-30 independent acquisition targets with filters, scoring breakdown, and facility estimates.</p>
+                <a href="/targets" class="btn">View Dashboard →</a>
+            </div>
+            
+            <div class="card">
+                <h2>📄 Download Report</h2>
+                <p>Excel workbook with 4 sheets: Ranked (all 485), Groups, Top 30 Targets, and Dossiers reference.</p>
+                <a href="/export_xlsx" class="btn">Download Excel →</a>
+            </div>
+            
+            <div class="card">
+                <h2>🏢 Consolidator Map</h2>
+                <p>Identify 25+ consolidator roll-ups (busbusbus, Keolis, Transdev, Maheux, etc.) with member counts.</p>
+                <a href="/groupes" class="btn">View Groups →</a>
+            </div>
+        </section>
+        
+        <section>
+            <h2 style="text-align: center; margin: 3rem 0 2rem;">Key Metrics</h2>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-value">485</div>
+                    <div class="stat-label">Total Operators</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">233</div>
+                    <div class="stat-label">Independent Targets</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">252</div>
+                    <div class="stat-label">Consolidator-Owned</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-value">378</div>
+                    <div class="stat-label">Enriched w/ Data</div>
+                </div>
+            </div>
+        </section>
+        
+        <section style="background: white; padding: 2rem; border-radius: 8px; margin: 3rem 0;">
+            <h2>Top-3 Acquisition Targets</h2>
+            <table style="width: 100%; margin-top: 1rem; border-collapse: collapse;">
+                <thead style="background: #f0f0f0;">
+                    <tr>
+                        <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #B14506;">Rank</th>
+                        <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #B14506;">Company</th>
+                        <th style="padding: 1rem; text-align: left; border-bottom: 2px solid #B14506;">City</th>
+                        <th style="padding: 1rem; text-align: right; border-bottom: 2px solid #B14506;">Est. Fleet</th>
+                        <th style="padding: 1rem; text-align: right; border-bottom: 2px solid #B14506;">Fit Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 1rem;">1</td>
+                        <td style="padding: 1rem;">Boutin, Brochu, Couture inc.</td>
+                        <td style="padding: 1rem;">St-Magloire</td>
+                        <td style="padding: 1rem; text-align: right;">211</td>
+                        <td style="padding: 1rem; text-align: right; color: #B14506; font-weight: bold;">0.460</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #eee;">
+                        <td style="padding: 1rem;">2</td>
+                        <td style="padding: 1rem;">Autobus Benoit & Fils inc.</td>
+                        <td style="padding: 1rem;">Saint-Armand</td>
+                        <td style="padding: 1rem; text-align: right;">215</td>
+                        <td style="padding: 1rem; text-align: right; color: #B14506; font-weight: bold;">0.460</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 1rem;">3</td>
+                        <td style="padding: 1rem;">Jules Paré & Fils inc.</td>
+                        <td style="padding: 1rem;">Saint-Anselme</td>
+                        <td style="padding: 1rem; text-align: right;">181</td>
+                        <td style="padding: 1rem; text-align: right; color: #B14506; font-weight: bold;">0.460</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p style="color: #666; margin-top: 1rem; font-size: 0.9rem;">
+                See full ranking of 30 targets in the <a href="/targets" style="color: #B14506;">Interactive Dashboard</a>
+            </p>
+        </section>
+    </div>
+    
+    <footer>
+        <p><strong>M&A Qualification System</strong> | Quebec Bus Operators Analysis</p>
+        <p style="font-size: 0.9rem; margin-top: 1rem; opacity: 0.8;">
+            485 operators evaluated | 233 independent targets | 25+ consolidator groups detected
+        </p>
+        <p style="font-size: 0.85rem; margin-top: 1rem; opacity: 0.6;">
+            Published April 22, 2026 | Live Dashboard | SQLite Database | Excel Export
+        </p>
+    </footer>
+</body>
+</html>

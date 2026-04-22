@@ -1,0 +1,221 @@
+================================================================================
+🎯 M&A QUALIFICATION: QUEBEC BUS OPERATORS
+EXECUTIVE SUMMARY FOR STAKEHOLDERS
+================================================================================
+
+Date: April 22, 2026
+Status: Complete & Published
+Prepared by: Bus MA Qualification System v1.0
+
+================================================================================
+OVERVIEW
+================================================================================
+
+This analysis qualifies 485 Quebec FTA member bus operators as M&A acquisition 
+targets. The system identifies 233 INDEPENDENT operators suitable for acquisition,
+separate from 252 consolidator-owned subsidiaries.
+
+Key Deliverable: TOP-30 RANKED ACQUISITION TARGETS
+
+================================================================================
+TOP 10 ACQUISITION TARGETS
+================================================================================
+
+Rank | Company                              | City                  | Est. Buses | Score
+-----|--------------------------------------|----------------------|-----------|-------
+  1  | Boutin, Brochu, Couture inc.        | St-Magloire           | 211       | 0.460
+  2  | Autobus Benoit & Fils inc.          | Saint-Armand          | 215       | 0.460
+  3  | Jules Paré & Fils inc.              | Saint-Anselme         | 181       | 0.460
+  4  | Robert Paquette Autobus & Fils inc. | Saint-Eustache        | 188       | 0.340
+  5  | V.L. Transport inc.                 | Bassin                | 214       | 0.340
+  6  | 9089-0922 Québec inc.               | Saint-Isidore-de-La...| 184       | 0.340
+  7  | Mor-Transport inc.                  | Saint-Lambert         | 185       | 0.340
+  8  | Ent. de transport scolaire Rivière- | La Malbaie            | 186       | 0.340
+  9  | Unitours                            | Québec                | 187       | 0.340
+ 10  | 9462-7528 Québec inc. (CD Bouchard) | Amqui                 | 185       | 0.340
+
+PROFILE: Family-owned, owner-operated, small-to-mid fleet (160–215 buses),
+geographically dispersed across Laurentides, Montérégie, Québec regions.
+
+================================================================================
+CRITICAL FINDINGS
+================================================================================
+
+✅ CONSOLIDATOR ROLL-UPS IDENTIFIED & EXCLUDED
+────────────────────────────────────────────────
+These groups are EXCLUDED from top-30 targets but tracked for reference:
+
+   • busbusbus (Desmarais network)        — 29 subsidiaries
+   • Groupe Autocar Jeannois               — 9 subsidiaries
+   • Groupe Maheux                         — 8 subsidiaries
+   • Groupe Gaudreault                     — 7 subsidiaries
+   • Groupe Dion                           — 6 subsidiaries
+   • Keolis / Orléans Express              — 5 subsidiaries
+   • Transdev Québec                       — 5 subsidiaries
+   • [12 other groups]                    — 4+ subsidiaries each
+
+Total in groups: 252 operators (52% of universe)
+
+================================================================================
+DATASET METRICS
+================================================================================
+
+Total Operators Analyzed           485
+├─ Independent (targets)           233  (48%)
+└─ Consolidator-owned              252  (52%)
+
+Enriched with Facility Data        378  (78%)
+├─ Parking area estimates (m²)     378
+├─ Bus capacity estimates          378
+└─ Satellite confidence            ±30%
+
+Groups Detected                    25+
+Top Targets Identified             30
+
+================================================================================
+SCORING METHODOLOGY
+================================================================================
+
+M&A Fit Score = Independence × (0.5×Size + 0.3×Clarity + 0.2×Succession)
+
+Component Breakdown:
+  • Independence (100%): 1.0 if standalone, 0.2 if in group
+  • Size (50%): Facility parking area (m²) as proxy for fleet capacity
+  • Clarity (30%): Ownership structure simplicity (single family vs. complex)
+  • Succession (20%): Owner age, media signals, transition indicators
+
+Data Quality:
+  ✅ FTA roster               — 100% coverage, authoritative
+  ✅ Group detection          — 100% coverage (address/email/president)
+  ✅ Facility estimates       — 78% coverage, ±30% accuracy
+  ⚠️  CTQ permits            — NOT INCLUDED (reCAPTCHA blocks automation)
+  ⚠️  Succession signals      — MINIMAL (requires Phase 2 media research)
+
+================================================================================
+DELIVERABLES
+================================================================================
+
+1. LIVE INTERACTIVE DASHBOARD
+   Location: http://127.0.0.1:8765/targets
+   Features:
+     • Real-time filtering (region, minimum score)
+     • Visual ranking with score progress bars
+     • Score component breakdown per operator
+     • Summary cards (independents, consolidators, averages)
+
+2. EXCEL EXPORT (4 sheets)
+   File: output/operators_ma.xlsx (91 KB)
+   Sheets:
+     • Ranked        — All 485 operators with complete data
+     • Groups        — Consolidator ownership structures
+     • Top 30        — Independent targets only
+     • Dossiers      — [Placeholder for one-pagers]
+
+3. SQLITE DATABASE
+   File: data/operators.db (484 KB)
+   Tables:
+     • operators     — 485 records (contact, NEQ, president)
+     • groups        — 25+ consolidator clusters
+     • facility      — 378 satellite-enriched estimates
+     • scores        — M&A fit rankings
+   Fully queryable; see README.md for example SQL
+
+4. DOCUMENTATION
+   • RESULTS.md      — Full methodology + limitations (8.1 KB)
+   • README.md       — Quick start + maintenance guide
+
+================================================================================
+VALIDATION & LIMITATIONS
+================================================================================
+
+✅ STRENGTHS
+  • Complete coverage of FTA membership (485/485 operators)
+  • Consolidator roll-ups detected and excluded
+  • Family-owner identification (NEQ + president matching)
+  • Satellite-based facility proxy (no field data required)
+  • Independent vs. group classification: high confidence
+
+⚠️  LIMITATIONS
+  • Facility capacity: Estimated ±30% (satellite heuristics, not validated)
+  • Fleet size: Proxy from parking area (not CTQ permits)
+  • Succession signals: Minimal (requires Phase 2 media research)
+  • Small operator coverage: May miss sole proprietorships
+  • Group detection: Address/email/president clustering (false positives possible)
+
+📋 RECOMMENDATIONS FOR VALIDATION
+  1. Spot-check top-5 targets via CTQ website + LinkedIn
+  2. Verify consolidator group membership for busbusbus, Transdev, Keolis
+  3. Confirm facility estimates via Google Street View for top-10
+  4. Manual review of >30 fit score operators (currently minimal succession data)
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+IMMEDIATE (Week 1)
+  □ Share top-30 ranking with acquisition team
+  □ Validate top-5 candidates via CTQ + LinkedIn
+  □ Confirm facility estimates for top-10 (Street View)
+
+PHASE 2 (Optional)
+  □ Agent-based web search for succession signals (owner age, "à vendre")
+  □ Media intelligence on acquisitions, retirements, generational transition
+  □ Contact top-10 targets for preliminary expressions of interest
+
+PHASE 3
+  □ Detailed site visits + fleet inspection for top-5
+  □ Financial due diligence (revenue, margins, debt)
+  □ Regulatory compliance review (permits, insurance, labor)
+
+ONGOING
+  □ Monthly refresh of operator roster
+  □ Monitor web signals (bankruptcy filings, press releases, ownership changes)
+  □ Update group membership as consolidators acquire/divest
+
+================================================================================
+ACCESS & USAGE
+================================================================================
+
+DASHBOARD (Interactive Online)
+  URL: http://127.0.0.1:8765/targets
+  Features:
+    • Filter by region (Montérégie, Québec, Laurentides)
+    • Filter by minimum fit score (0.30–0.46)
+    • Visual progress bars + score breakdown
+    • Real-time querying of database
+
+EXCEL EXPORT (Offline Download)
+  Path: /Users/philippe/Documents/Claude/bus_ma/output/operators_ma.xlsx
+  Contains all 485 operators with scores, facility data, group info
+  4 worksheets: Ranked, Groups, Top 30, Dossiers
+
+DATABASE (Direct Query)
+  Location: /Users/philippe/Documents/Claude/bus_ma/data/operators.db
+  Type: SQLite 3
+  Command: sqlite3 data/operators.db "SELECT ..."
+
+Example SQL:
+  -- Top-30 independents
+  SELECT name, city, president, parking_area_m2, ma_fit_score
+  FROM scores s
+  JOIN operators o ON s.operator_id = o.id
+  LEFT JOIN facility f ON o.id = f.operator_id
+  WHERE o.group_id IS NULL
+  ORDER BY ma_fit_score DESC LIMIT 30;
+
+================================================================================
+SYSTEM INFO
+================================================================================
+
+Generated:    April 22, 2026 · 12:30 UTC
+Status:       ✅ Published
+Database:     SQLite 3
+Web Server:   Flask 2.x (Python 3.9)
+Imagery:      Google Maps Static API (satellite z=19)
+Processing:   PIL/OpenCV (image analysis)
+Report:       Markdown + Excel + Interactive Web Dashboard
+
+================================================================================
+For technical support or detailed methodology questions:
+  See RESULTS.md or README.md in project root.
+================================================================================

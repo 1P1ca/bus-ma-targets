@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Entreprises — Qualification FTA{% endblock %}
+{% block content %}
+
+<h1>Entreprises</h1>
+<p class="muted">{{ filtered }} résultats sur {{ total }} opérateurs au total.</p>
+
+<form method="get" class="filtres">
+  <div class="row">
+    <label>Recherche
+      <input name="q" value="{{ q }}" placeholder="Nom, président, courriel, NEQ…">
+    </label>
+    <label>Ville
+      <input name="city" list="cities" value="{{ city }}" placeholder="Toutes">
+      <datalist id="cities">
+        {% for c in cities %}<option value="{{c}}">{% endfor %}
+      </datalist>
+    </label>
+    <label>Statut
+      <select name="statut">
+        <option value="">—</option>
+        {% for v, lbl in STATUT_CHOICES %}
+          <option value="{{v}}" {% if statut==v %}selected{% endif %}>{{lbl}}</option>
+        {% endfor %}
+      </select>
+    </label>
+    <label>Consolidateur
+      <select name="excl">
+        <option value="non" {% if excl=='non' %}selected{% endif %}>Exclure filiales</option>
+        <option value="oui" {% if excl=='oui' %}selected{% endif %}>Filiales seulement</option>
+        <option value="tous"{% if excl=='tous' %}selected{% endif %}>Tous</option>
+      </select>
+    </label>
+    <label>Capacité ≥
+      <input type="number" name="min_cap" value="{{ min_cap }}" min="0" step="10" style="width:6em">
+    </label>
+    <label class="check">
+      <input type="checkbox" name="has_website" value="1" {% if has_website %}checked{% endif %}>
+      Avec site Web
+    </label>
+    <label>Tri
+      <select name="sort">
+        <option value="rank"         {% if sort=='rank' %}selected{% endif %}>Rang M&amp;A</option>
+        <option value="fit"          {% if sort=='fit' %}selected{% endif %}>Pointage M&amp;A</option>
+        <option value="cap"          {% if sort=='cap' %}selected{% endif %}>Capacité (autobus)</option>
+        <option value="parking"      {% if sort=='parking' %}selected{% endif %}>Stationnement (m²)</option>
+        <option value="name"         {% if sort=='name' %}selected{% endif %}>Nom</option>
+        <option value="city"         {% if sort=='city' %}selected{% endif %}>Ville</option>
+        <option value="status"       {% if sort=='status' %}selected{% endif %}>Statut</option>
+        <option value="last_contact" {% if sort=='last_contact' %}selected{% endif %}>Dernier contact</option>
+      </select>
+    </label>
+    <label>Ordre
+      <select name="dir">
+        <option value="asc"  {% if direction=='asc'  %}selected{% endif %}>Croissant</option>
+        <option value="desc" {% if direction=='desc' %}selected{% endif %}>Décroissant</option>
+      </select>
+    </label>
+    <button type="submit">Filtrer</button>
+    <a class="btn-ghost" href="{{ url_for('index') }}">Réinitialiser</a>
+  </div>
+</form>
+
+<table class="grid">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Entreprise</th>
+      <th>Ville</th>
+      <th>Président</th>
+      <th class="num">Cap.</th>
+      <th class="num">Pointage</th>
+      <th>Statut</th>
+      <th>Comm.</th>
+      <th>Dernier contact</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in rows %}
+      <tr class="{% if r['is_excluded'] %}is-excluded{% endif %}">
+        <td class="num muted">{{ r['rank'] or '' }}</td>
+        <td>
+          {% if r['owner_flag'] %}★{% endif %}
+          <a href="{{ url_for('op_detail', op_id=r['id']) }}">{{ r['name'] }}</a>
+          {% if r['group_name'] %}
+            <div class="muted small">{{ r['group_name'] }}</div>
+          {% endif %}
+        </td>
+        <td>{{ r['city'] or '' }}</td>
+        <td>{{ r['president'] or '' }}</td>
+        <td class="num">{{ r['cap'] or '' }}</td>
+        <td class="num">{{ '%.3f' % r['ma_fit_score'] if r['ma_fit_score'] is not none else '' }}</td>
+        <td>{{ r['status'] or '' }}</td>
+        <td class="num">{{ r['n_comm'] or '' }}</td>
+        <td class="muted small">{{ (r['last_contact_at'] or '')[:10] }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

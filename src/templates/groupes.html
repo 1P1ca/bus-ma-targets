@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Groupes et consolidateurs{% endblock %}
+{% block content %}
+<h1>Groupes et consolidateurs</h1>
+<p class="muted">Les filiales de consolidateurs sont exclues par défaut de la liste des cibles acquisitions.
+Les regroupements par signal partagé (adresse, domaine de courriel, président) sont des pistes à valider.</p>
+
+<table class="grid">
+  <thead><tr><th>Groupe</th><th>Type</th><th>Exclu des cibles</th><th class="num">Membres</th><th>Entreprises</th></tr></thead>
+  <tbody>
+    {% for r in rows %}
+      <tr class="{% if r['is_excluded'] %}is-excluded{% endif %}">
+        <td><strong>{{ r['name'] }}</strong></td>
+        <td>{{ r['kind'] or '' }}</td>
+        <td>{% if r['is_excluded'] %}Oui{% else %}Non{% endif %}</td>
+        <td class="num">{{ r['n'] }}</td>
+        <td class="muted small">{{ r['members'] or '' }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

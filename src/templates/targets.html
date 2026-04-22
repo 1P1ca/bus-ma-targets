@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Cibles M&A — Qualification FTA{% endblock %}
+
+{% block content %}
+<h1>🎯 Cibles d'acquisition potentielles</h1>
+
+<div class="card">
+  <h2>Entreprises indépendantes — Classement par pertinence M&A</h2>
+  
+  <div style="margin-bottom: 1.5rem;">
+    <p style="color: var(--grey-500); font-size: 12px; margin: 0;">
+      <strong>233 transporteurs indépendants</strong> (non-affiliés à un groupe consolidateur)
+      <br>Classés par score M&A = f(indépendance, clarté propriétaire, taille, signaux de succession)
+    </p>
+  </div>
+
+  <!-- Filter row -->
+  <form class="filtres" method="get">
+    <div class="row">
+      <label style="flex: 1; min-width: 150px;">
+        Filtrer par région
+        <select name="city" style="width: 100%; margin-top: 0.5rem;">
+          <option value="">— Toutes les régions —</option>
+          <option value="Montérégie">Montérégie</option>
+          <option value="Québec">Québec</option>
+          <option value="Laurentides">Laurentides</option>
+        </select>
+      </label>
+      <label style="flex: 1; min-width: 150px;">
+        Score minimum
+        <input type="number" name="min_score" step="0.01" placeholder="0.30" style="width: 100%; margin-top: 0.5rem;">
+      </label>
+      <button type="submit" style="align-self: flex-end; margin-left: auto;">Filtrer</button>
+      <a href="/targets" class="btn-ghost" style="align-self: flex-end; margin-left: 0.5rem; padding: var(--s-2) var(--s-4);">Réinitialiser</a>
+    </div>
+  </form>
+</div>
+
+<!-- Results table -->
+<table class="grid">
+  <thead>
+    <tr>
+      <th style="width: 5%; text-align: center;">Rang</th>
+      <th style="width: 30%;">Entreprise</th>
+      <th style="width: 12%;">Ville</th>
+      <th style="width: 10%; text-align: center;">Président</th>
+      <th style="width: 8%; text-align: center;">Parc (bus)</th>
+      <th style="width: 8%; text-align: center;">Terrain (m²)</th>
+      <th style="width: 27%;">Score M&A</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in targets %}
+    <tr>
+      <td style="text-align: center; font-weight: 600; color: var(--rouille);">{{ row['rank'] }}</td>
+      <td>
+        <a href="/operateurs/{{ row['id'] }}"><strong>{{ row['name'][:45] }}</strong></a>
+        {% if row['website'] %}
+          <br><span class="small" style="color: var(--grey-500);">{{ row['website'][:40] }}</span>
+        {% endif %}
+      </td>
+      <td>{{ row['city'] }}</td>
+      <td style="font-size: 12px;">{{ row['president'] or '—' }}</td>
+      <td style="text-align: right; font-variant-numeric: tabular-nums;">{{ row['cap_est'] or '—' }}</td>
+      <td style="text-align: right; font-variant-numeric: tabular-nums;">{{ row['parking_m2']|int if row['parking_m2'] else '—' }}</td>
+      <td>
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="flex: 1;">
+            <div style="background: var(--grey-200); height: 20px; border-radius: 2px; overflow: hidden;">
+              <div style="background: var(--rouille); height: 100%; width: {{ row['fit_score'] * 100 }}%; transition: width 0.2s;"></div>
+            </div>
+          </div>
+          <span style="font-weight: 600; min-width: 40px; text-align: right;">{{ "%.3f"|format(row['fit_score']) }}</span>
+        </div>
+        <div style="font-size: 11px; color: var(--grey-500); margin-top: 0.25rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <div>Indépendance: <strong>{{ "%.2f"|format(row['independence_score']) }}</strong></div>
+          <div>Clarté: <strong>{{ "%.2f"|format(row['clarity_score']) }}</strong></div>
+        </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if not targets %}
+<div style="text-align: center; padding: 2rem; color: var(--grey-500);">
+  Aucun transporteur ne correspond à ces critères.
+</div>
+{% endif %}
+
+<!-- Summary stats -->
+<div style="margin-top: 2rem; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 1rem;">
+  <div class="card" style="margin: 0;">
+    <div style="font-size: 24px; font-weight: 800; color: var(--rouille);">{{ total_independents }}</div>
+    <div style="font-size: 12px; color: var(--grey-500); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.25rem;">Indépendants</div>
+  </div>
+  <div class="card" style="margin: 0;">
+    <div style="font-size: 24px; font-weight: 800; color: var(--rouille);">{{ total_consolidators }}</div>
+    <div style="font-size: 12px; color: var(--grey-500); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.25rem;">En groupes</div>
+  </div>
+  <div class="card" style="margin: 0;">
+    <div style="font-size: 24px; font-weight: 800; color: var(--rouille);">{{ avg_fleet|round(0)|int }}</div>
+    <div style="font-size: 12px; color: var(--grey-500); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.25rem;">Flotte moy.</div>
+  </div>
+  <div class="card" style="margin: 0;">
+    <div style="font-size: 24px; font-weight: 800; color: var(--rouille);">{{ top3_score|round(2) }}</div>
+    <div style="font-size: 12px; color: var(--grey-500); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 0.25rem;">Score top-3</div>
+  </div>
+</div>
+
+<!-- Scoring explanation -->
+<div class="card" style="margin-top: 2rem; background: var(--ivoire); border-left: 4px solid var(--rouille);">
+  <h3>📊 Méthodologie de scoring</h3>
+  <dl class="kv" style="font-size: 13px;">
+    <dt>Score M&A</dt>
+    <dd>Indépendance × (50% Taille + 30% Clarté propriétaire + 20% Signaux succession)</dd>
+    
+    <dt>Indépendance</dt>
+    <dd>1.0 = pas d'affiliation consolidateur; 0.2 = filiale identifiée</dd>
+    
+    <dt>Taille</dt>
+    <dd>Estimée à partir des images satellite (surface parking, estimation parc)</dd>
+    
+    <dt>Clarté</dt>
+    <dd>Simplicité structure propriétaire (actionnaires uniques, famille, etc.)</dd>
+    
+    <dt>Succession</dt>
+    <dd>Signaux web + âge président + mentions "à vendre" / transmission</dd>
+  </dl>
+</div>
+
+{% endblock %}

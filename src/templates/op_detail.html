@@ -1,0 +1,412 @@
+{% extends "base.html" %}
+{% block title %}{{ op['name'] }} — Fiche entreprise{% endblock %}
+{% block content %}
+
+<p class="muted"><a href="{{ url_for('index') }}">← Retour à la liste</a></p>
+
+<header class="op-header">
+  <h1>
+    {% if op['owner_flag'] %}<span title="Favori">★</span>{% endif %}
+    {{ op['name'] }}
+  </h1>
+  <div class="badges">
+    {% if op['group_name'] %}
+      <span class="badge {% if op['group_excluded'] %}badge-excluded{% endif %}"
+            title="{{ op['group_kind'] or '' }}">{{ op['group_name'] }}</span>
+    {% endif %}
+    {% if op['status'] %}<span class="badge badge-status">{{ op['status'] }}</span>{% endif %}
+    {% if op['rank'] %}<span class="badge">Rang {{ op['rank'] }}</span>{% endif %}
+    {% if op['ma_fit_score'] is not none %}
+      <span class="badge">Pointage {{ '%.3f' % op['ma_fit_score'] }}</span>
+    {% endif %}
+  </div>
+</header>
+
+<nav class="tabs">
+  <a href="#coordonnees">Coordonnées</a>
+  <a href="#installations">Installations</a>
+  <a href="#permis">Permis CTQ</a>
+  <a href="#actionnariat">Actionnariat</a>
+  <a href="#communications">Communications ({{ comms|length }})</a>
+  <a href="#enrichissements">Enrichissements ({{ enrichments|length }})</a>
+  <a href="#historique">Historique des modifications</a>
+</nav>
+
+<!-- Coordonnées + édition -->
+<section id="coordonnees" class="card">
+  <h2>Coordonnées</h2>
+  <form method="post" action="{{ url_for('op_edit', op_id=op['id']) }}">
+    <div class="grid2">
+      <label>Nom
+        <input name="name" value="{{ op['name'] or '' }}" required>
+      </label>
+      <label>Dénomination légale
+        <input name="legal_name" value="{{ op['legal_name'] or '' }}">
+      </label>
+      <label>NEQ
+        <input name="neq" value="{{ op['neq'] or '' }}" pattern="\d{10}" maxlength="10">
+      </label>
+      <label>N° FTA
+        <input value="{{ op['fta_no'] or '' }}" disabled>
+      </label>
+
+      <label>Adresse
+        <input name="address" value="{{ op['address'] or '' }}">
+      </label>
+      <label>Ville
+        <input name="city" value="{{ op['city'] or '' }}">
+      </label>
+      <label>Code postal
+        <input name="postal" value="{{ op['postal'] or '' }}">
+      </label>
+      <label>Province
+        <input name="province" value="{{ op['province'] or 'QC' }}">
+      </label>
+
+      <label>Téléphone
+        <input name="phone" value="{{ op['phone'] or '' }}">
+      </label>
+      <label>Télécopieur
+        <input name="fax" value="{{ op['fax'] or '' }}">
+      </label>
+      <label>Courriel
+        <input name="email" type="email" value="{{ op['email'] or '' }}">
+      </label>
+      <label>Site Internet
+        <input name="website" value="{{ op['website'] or '' }}">
+      </label>
+
+      <label>Président
+        <input name="president" value="{{ op['president'] or '' }}">
+      </label>
+      <label>Délégué votant
+        <input name="delegue_votant" value="{{ op['delegue_votant'] or '' }}">
+      </label>
+
+      <label>Statut
+        <select name="status">
+          <option value="">—</option>
+          {% for v, lbl in STATUT_CHOICES %}
+            <option value="{{v}}" {% if op['status']==v %}selected{% endif %}>{{lbl}}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label class="check">
+        <input type="checkbox" name="owner_flag" value="1" {% if op['owner_flag'] %}checked{% endif %}>
+        Marquer comme favori
+      </label>
+    </div>
+
+    <label>Notes internes
+      <textarea name="notes" rows="4">{{ op['notes'] or '' }}</textarea>
+    </label>
+
+    <div class="row">
+      <label>Auteur (vous)
+        <input name="author" value="{{ author }}" placeholder="Votre nom" required>
+      </label>
+      <button type="submit">Enregistrer</button>
+    </div>
+  </form>
+</section>
+
+<!-- Installations -->
+<section id="installations" class="card">
+  <h2>Installations (estimation satellite)</h2>
+  {% if facility %}
+    <div class="grid2">
+      <div>
+        <dl class="kv">
+          <dt>Latitude / Longitude</dt>
+          <dd>{{ op['lat'] }}, {{ op['lng'] }}</dd>
+          <dt>Surface de stationnement (estimée)</dt>
+          <dd>{{ '%d' % (facility['parking_area_m2'] or 0) }} m²</dd>
+          <dt>Surface de bâtiment (estimée)</dt>
+          <dd>{{ '%d' % (facility['building_area_m2'] or 0) }} m²</dd>
+          <dt>Capacité estimée (autobus)</dt>
+          <dd>{{ facility['bus_capacity_est'] or '—' }}</dd>
+          <dt>Méthode</dt>
+          <dd>{{ facility['estimation_method'] }} (confiance {{ facility['confidence'] }})</dd>
+        </dl>
+      </div>
+      <div>
+        {% if facility['satellite_image_path'] %}
+          <img id="satImg" class="sat" src="{{ url_for('satellite', name=facility['satellite_image_path'].split('/')[-1]) }}"
+               alt="Image satellite" onclick="openSatelliteModal()">
+          <p class="muted small" style="margin-top: 4px; cursor: help;">Cliquer pour agrandir</p>
+        {% else %}
+          <p class="muted">Aucune image.</p>
+        {% endif %}
+      </div>
+    </div>
+  {% else %}
+    <p class="muted">Aucune estimation d'installation disponible.</p>
+  {% endif %}
+</section>
+
+<!-- Permis CTQ -->
+<section id="permis" class="card">
+  <h2>Permis CTQ</h2>
+  {% if permits %}
+    <table class="grid">
+      <thead><tr><th>Type</th><th>N° permis</th><th>Véhicules déclarés</th><th>Statut</th></tr></thead>
+      <tbody>
+      {% for p in permits %}
+        <tr>
+          <td>{{ PERMIT_LABELS.get(p['permit_type'], p['permit_type']) }}</td>
+          <td>{{ p['permit_no'] or '—' }}</td>
+          <td class="num">{{ p['declared_vehicles'] or '—' }}</td>
+          <td>{{ p['status'] or '—' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="muted">Aucun permis importé. Importer via dossier manuel :
+      dépôt des HTML dans <code>data/raw/ctq_html/</code> puis
+      <code>python3 run.py ctq</code>.</p>
+  {% endif %}
+</section>
+
+<!-- Actionnariat REQ -->
+<section id="actionnariat" class="card">
+  <h2>Actionnariat &amp; administrateurs</h2>
+  {% if ownership %}
+    <table class="grid">
+      <thead><tr><th>Rôle</th><th>Nom</th><th>Type</th><th>% détenu</th><th>Source</th></tr></thead>
+      <tbody>
+      {% for o in ownership %}
+        <tr>
+          <td>{{ o['role'] }}</td>
+          <td>{{ o['entity_name'] }}</td>
+          <td>{{ o['entity_type'] or '—' }}</td>
+          <td class="num">{{ (o['pct'] ~ ' %') if o['pct'] else '—' }}</td>
+          <td class="muted small">{{ o['source'] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="muted">Aucune donnée d'actionnariat. Importer depuis le REQ :
+      dépôt des HTML dans <code>data/raw/req_html/</code> puis
+      <code>python3 run.py req</code>.</p>
+  {% endif %}
+</section>
+
+<!-- Communications -->
+<section id="communications" class="card">
+  <h2>Communications</h2>
+
+  <details open>
+    <summary><strong>Enregistrer une communication</strong></summary>
+    <form method="post" action="{{ url_for('comm_add', op_id=op['id']) }}">
+      <div class="grid2">
+        <label>Type
+          <select name="kind">
+            {% for v, lbl in COMM_KIND_CHOICES %}
+              <option value="{{v}}">{{lbl}}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Direction
+          <select name="direction">
+            {% for v, lbl in COMM_DIR_CHOICES %}<option value="{{v}}">{{lbl}}</option>{% endfor %}
+          </select>
+        </label>
+        <label>Date et heure
+          <input type="datetime-local" name="occurred_at">
+        </label>
+        <label>Personne contactée
+          <input name="contact" placeholder="Ex. Jean Tremblay">
+        </label>
+      </div>
+      <label>Sujet
+        <input name="subject" placeholder="Sujet ou titre de la communication">
+      </label>
+      <label>Notes détaillées
+        <textarea name="notes" rows="4"
+          placeholder="Points discutés, réponses, références de documents…"></textarea>
+      </label>
+      <label>Prochaine étape
+        <input name="next_step" placeholder="Ex. relance le 15 mai, envoi NDA, visite">
+      </label>
+      <div class="row">
+        <label>Auteur
+          <input name="author" value="{{ author }}" required>
+        </label>
+        <button type="submit">Enregistrer la communication</button>
+      </div>
+    </form>
+  </details>
+
+  {% if comms %}
+    <ul class="timeline">
+      {% for c in comms %}
+        <li>
+          <div class="timeline-head">
+            <strong>{{ dict(COMM_KIND_CHOICES).get(c['kind'], c['kind']) }}</strong>
+            <span class="muted small">· {{ c['direction'] or '' }} · {{ c['occurred_at'] }}</span>
+            {% if c['contact'] %}<span class="muted small">· {{ c['contact'] }}</span>{% endif %}
+            <span class="muted small">· par {{ c['author'] or '—' }}</span>
+          </div>
+          {% if c['subject'] %}<div><em>{{ c['subject'] }}</em></div>{% endif %}
+          {% if c['notes'] %}<div class="pre">{{ c['notes'] }}</div>{% endif %}
+          {% if c['next_step'] %}<div>→ <strong>Prochaine étape :</strong> {{ c['next_step'] }}</div>{% endif %}
+          <form method="post" action="{{ url_for('comm_delete', cid=c['id']) }}"
+                onsubmit="return confirm('Supprimer cette communication ?')">
+            <button class="btn-ghost small" type="submit">Supprimer</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">Aucune communication enregistrée.</p>
+  {% endif %}
+</section>
+
+<!-- Enrichissements -->
+<section id="enrichissements" class="card">
+  <h2>Enrichissements manuels (données externes)</h2>
+
+  <details open>
+    <summary><strong>Ajouter une donnée externe</strong></summary>
+    <form method="post" action="{{ url_for('enrich_add', op_id=op['id']) }}">
+      <div class="grid2">
+        <label>Champ
+          <select name="field">
+            {% for v, lbl in [
+              ('neq',"NEQ"),
+              ('fleet_total',"Nombre total d'autobus (véridique)"),
+              ('fleet_scolaire',"Nombre d'autobus scolaires"),
+              ('fleet_nolise',"Nombre d'autocars nolisés"),
+              ('fleet_adapte',"Nombre de véhicules adaptés"),
+              ('owner_age',"Âge approximatif du propriétaire"),
+              ('successor',"Successeur identifié"),
+              ('revenue_est',"Revenus annuels estimés (CAD)"),
+              ('shareholders',"Actionnaires (liste, %)"),
+              ('parking_m2_manual',"Surface de stationnement mesurée (m²)"),
+              ('building_m2_manual',"Surface de bâtiment mesurée (m²)"),
+              ('website',"Site Internet (correction)"),
+              ('email',"Courriel (correction)"),
+              ('phone',"Téléphone (correction)"),
+              ('note',"Note libre"),
+            ] %}
+            <option value="{{v}}">{{lbl}}</option>
+            {% endfor %}
+          </select>
+        </label>
+        <label>Valeur
+          <input name="value" required>
+        </label>
+        <label>Source
+          <input name="source" placeholder="Ex. appel, LinkedIn, site Web, document PDF…">
+        </label>
+        <label>URL de la source
+          <input name="source_url" type="url" placeholder="https://…">
+        </label>
+        <label>Confiance (0,0 – 1,0)
+          <input name="confidence" type="number" step="0.05" min="0" max="1" value="0.8">
+        </label>
+        <label class="check">
+          <input type="checkbox" name="promote" value="1">
+          Écraser la fiche (NEQ, site Web, courriel, téléphone)
+        </label>
+      </div>
+      <div class="row">
+        <label>Auteur
+          <input name="author" value="{{ author }}" required>
+        </label>
+        <button type="submit">Ajouter l'enrichissement</button>
+      </div>
+    </form>
+  </details>
+
+  {% if enrichments %}
+    <table class="grid">
+      <thead>
+        <tr><th>Date</th><th>Champ</th><th>Valeur</th><th>Source</th>
+            <th>Confiance</th><th>Auteur</th><th></th></tr>
+      </thead>
+      <tbody>
+      {% for e in enrichments %}
+        <tr>
+          <td class="muted small">{{ (e['created_at'] or '')[:16] }}</td>
+          <td>{{ e['field'] }}</td>
+          <td>{{ e['value'] }}</td>
+          <td>{{ e['source'] or '' }}
+            {% if e['source_url'] %}<a href="{{e['source_url']}}" target="_blank" rel="noopener">↗</a>{% endif %}
+          </td>
+          <td class="num">{{ '%.2f' % (e['confidence'] or 0) }}</td>
+          <td>{{ e['author'] or '' }}</td>
+          <td>
+            <form method="post" action="{{ url_for('enrich_delete', eid=e['id']) }}"
+                  onsubmit="return confirm('Supprimer cet enrichissement ?')">
+              <button type="submit" class="btn-ghost small">✕</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="muted">Aucune donnée externe saisie.</p>
+  {% endif %}
+</section>
+
+<!-- Historique -->
+<section id="historique" class="card">
+  <h2>Historique des modifications</h2>
+  {% if edits %}
+    <table class="grid">
+      <thead><tr><th>Date</th><th>Champ</th><th>Ancienne valeur</th>
+                 <th>Nouvelle valeur</th><th>Auteur</th></tr></thead>
+      <tbody>
+      {% for e in edits %}
+        <tr>
+          <td class="muted small">{{ (e['created_at'] or '')[:16] }}</td>
+          <td>{{ e['field'] }}</td>
+          <td class="muted">{{ e['old_value'] or '' }}</td>
+          <td>{{ e['new_value'] or '' }}</td>
+          <td>{{ e['author'] or '' }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="muted">Aucune modification enregistrée.</p>
+  {% endif %}
+</section>
+
+<!-- Modal for satellite image expansion -->
+<div id="satModal" class="modal" onclick="closeSatelliteModal(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <span class="modal-close" onclick="closeSatelliteModal()">&times;</span>
+    <img id="satModalImg" src="" alt="Image satellite agrandie" style="width: 100%; height: auto;">
+  </div>
+</div>
+
+<script>
+function openSatelliteModal() {
+  const img = document.getElementById('satImg');
+  const modal = document.getElementById('satModal');
+  const modalImg = document.getElementById('satModalImg');
+  modalImg.src = img.src;
+  modal.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSatelliteModal(event) {
+  // Close if clicking outside the modal content, or via the X button
+  if (event && event.target.id !== 'satModal') return;
+  const modal = document.getElementById('satModal');
+  modal.classList.remove('active');
+  document.body.style.overflow = 'auto';
+}
+
+// Close modal on Escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeSatelliteModal();
+});
+</script>
+
+{% endblock %}

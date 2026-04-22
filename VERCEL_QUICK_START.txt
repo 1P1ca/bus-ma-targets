@@ -1,0 +1,169 @@
+================================================================================
+✨ VERCEL DEPLOYMENT — 3 OPTIONS (Choose 1)
+================================================================================
+
+OPTION 1: GITHUB → VERCEL (Recommended)
+───────────────────────────────────────────────────────────────────────────
+
+Status: ✅ BEST FOR TEAMS & UPDATES
+Time: 10-15 minutes
+Auto-deploy: YES (on every git push)
+
+Steps:
+  1. GitHub: Create free account → new repository → name: bus-ma-targets
+  2. Push: git remote add origin [your-github-url] && git push origin main
+  3. Vercel: https://vercel.com → Sign up (free) → Import → paste GitHub URL
+  4. Click Deploy
+  5. Wait 2-3 min → Get URL: https://bus-ma-targets.vercel.app/targets
+
+Share with client:
+  👉 https://bus-ma-targets.vercel.app/targets
+
+Future updates:
+  git push origin main → Auto-deploys!
+
+═════════════════════════════════════════════════════════════════════════════
+
+OPTION 2: VERCEL CLI (Fastest)
+───────────────────────────────────────────────────────────────────────────
+
+Status: ⚡ INSTANT DEPLOYMENT
+Time: 5 minutes
+Auto-deploy: NO (manual each time)
+
+Steps:
+  1. Install Node.js: https://nodejs.org → download & run
+  2. Verify: node --version (shows v16.x.x or higher)
+  3. Install CLI: npm install -g vercel
+  4. Login: vercel login (opens browser)
+  5. Deploy:
+     cd /Users/philippe/Documents/Claude/bus_ma
+     vercel
+     • Follow prompts
+     • Link to existing: No
+     • Clone sources: Yes
+  6. Done! URL shows on screen
+
+Share with client:
+  👉 https://bus-ma-targets.vercel.app/targets
+
+Future updates:
+  vercel (run again to redeploy)
+
+═════════════════════════════════════════════════════════════════════════════
+
+OPTION 3: GITHUB IMPORT (Most Direct)
+───────────────────────────────────────────────────────────────────────────
+
+Status: ✅ STRAIGHTFORWARD
+Time: 7 minutes
+Auto-deploy: YES (on git push)
+
+Steps:
+  1. GitHub: https://github.com/new → Create repository
+     • Name: bus-ma-targets
+     • Public: Yes
+     • Add README: Yes
+  2. Clone locally: git clone [your-repo-url]
+  3. Copy files: cp -r /Users/philippe/Documents/Claude/bus_ma/* ./
+  4. Commit: git add . && git commit -m "Initial" && git push origin main
+  5. Vercel: https://vercel.com/new/import
+     • Paste GitHub repo URL
+     • Click Import
+  6. Wait 2-3 min → Deployed!
+
+Share with client:
+  👉 https://bus-ma-targets.vercel.app/targets
+
+Future updates:
+  git push origin main → Auto-deploys!
+
+═════════════════════════════════════════════════════════════════════════════
+
+WHICH ONE TO CHOOSE?
+═════════════════════════════════════════════════════════════════════════════
+
+Choose OPTION 1 (GitHub + Vercel) if:
+  ✓ You want auto-deploy (updates on git push)
+  ✓ You'll update data regularly
+  ✓ You prefer web-based workflow
+
+Choose OPTION 2 (Vercel CLI) if:
+  ✓ You want fastest deployment
+  ✓ You have Node.js installed
+  ✓ You're comfortable with terminal
+
+Choose OPTION 3 (GitHub Import) if:
+  ✓ You want simple, direct setup
+  ✓ You don't have Node.js
+  ✓ You want auto-deploy + GitHub backup
+
+RECOMMENDATION: Option 1 (GitHub + Vercel)
+  • Best for team collaboration
+  • Auto-updates on every git push
+  • GitHub acts as backup
+  • Vercel handles deployment & CDN
+
+═════════════════════════════════════════════════════════════════════════════
+
+WHAT HAPPENS AFTER DEPLOYMENT
+═════════════════════════════════════════════════════════════════════════════
+
+✅ You get a public URL:
+   https://bus-ma-targets.vercel.app/targets
+   (accessible from any browser, worldwide)
+
+✅ Client can:
+   • View interactive ranking
+   • Filter by region/score
+   • Download Excel
+   • Access from any device
+
+✅ You can:
+   • View logs: Vercel Dashboard
+   • Redeploy: 1 command (Option 2) or git push (Options 1 & 3)
+   • Monitor uptime: Built-in Vercel monitoring
+   • Scale automatically: No action needed
+
+═════════════════════════════════════════════════════════════════════════════
+
+CLIENT EMAIL
+═════════════════════════════════════════════════════════════════════════════
+
+Subject: M&A Targets Dashboard — Live
+
+Hi [Client],
+
+Your M&A qualification analysis is now live and accessible worldwide:
+
+👉 https://bus-ma-targets.vercel.app/targets
+
+Dashboard includes:
+• Real-time ranking of 30 independent acquisition targets
+• Interactive filters (region, minimum score)
+• Facility estimates (parking, capacity)
+• Consolidator group analysis (25+ detected)
+• Download full dataset (Excel, all 485 operators)
+
+Key findings:
+• Top target: Boutin, Brochu, Couture inc. (211 buses, 0.460 fit score)
+• 233 independent operators analyzed
+• 252 consolidator subsidiaries excluded
+
+For detailed summary:
+📄 See attached: EXECUTIVE_SUMMARY.txt
+📊 Full dataset: operators_ma.xlsx
+
+Questions? Happy to discuss methodology or validate specific operators.
+
+Best regards
+
+═════════════════════════════════════════════════════════════════════════════
+
+NEXT STEP: Pick an option above and let me know!
+
+Option 1: GitHub + Vercel
+Option 2: Vercel CLI
+Option 3: GitHub Import
+
+═════════════════════════════════════════════════════════════════════════════

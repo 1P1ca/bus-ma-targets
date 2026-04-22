@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr-CA">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Qualification — Transporteurs par autobus{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <a href="{{ url_for('index') }}">
+      <svg width="140" height="40" viewBox="0 0 200 50" xmlns="http://www.w3.org/2000/svg" style="display: block; margin: 0; padding: 0;">
+        <!-- 1 (Rouille) -->
+        <text x="10" y="38" font-family="'Barlow Condensed', 'Oswald', 'Arial Narrow', sans-serif" font-size="32" font-weight="800" fill="#B14506">1</text>
+        <!-- + (Rouille) -->
+        <text x="35" y="38" font-family="'Barlow Condensed', 'Oswald', 'Arial Narrow', sans-serif" font-size="32" font-weight="800" fill="#B14506">+</text>
+        <!-- 1 (Rouille) -->
+        <text x="58" y="38" font-family="'Barlow Condensed', 'Oswald', 'Arial Narrow', sans-serif" font-size="32" font-weight="800" fill="#B14506">1</text>
+      </svg>
+    </a>
+  </div>
+  <nav>
+    <a href="{{ url_for('index') }}">Entreprises</a>
+    <a href="{{ url_for('groupes') }}">Groupes</a>
+    <a href="{{ url_for('targets') }}">🎯 Cibles M&A</a>
+    <a href="{{ url_for('stats') }}">Statistiques</a>
+    <a href="{{ url_for('op_new') }}">+ Nouvelle fiche</a>
+    <a href="{{ url_for('export_xlsx') }}">Export Excel</a>
+  </nav>
+</header>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flashes">
+    {% for cat, msg in messages %}
+      <div class="flash flash-{{cat}}">{{ msg }}</div>
+    {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<main>
+{% block content %}{% endblock %}
+</main>
+
+<footer>
+  <small>Qualification des transporteurs par autobus du Québec — piloté par une base SQLite locale.</small>
+</footer>
+</body>
+</html>

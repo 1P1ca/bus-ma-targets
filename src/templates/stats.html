@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Statistiques{% endblock %}
+{% block content %}
+<h1>Statistiques de la base</h1>
+
+<div class="grid2">
+  <section class="card">
+    <h2>Indicateurs</h2>
+    <table class="grid kv">
+      {% for k, v in counts.items() %}
+        <tr><td>{{ k }}</td><td class="num">{{ v }}</td></tr>
+      {% endfor %}
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>Répartition par statut</h2>
+    <table class="grid">
+      <thead><tr><th>Statut</th><th class="num">Nombre</th></tr></thead>
+      <tbody>
+      {% for s in statuts %}
+        <tr><td>{{ s['s'] }}</td><td class="num">{{ s['n'] }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<p class="muted"><a href="{{ url_for('export_xlsx') }}">Télécharger l'export Excel</a></p>
+{% endblock %}
