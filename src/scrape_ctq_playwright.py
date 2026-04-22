@@ -86,7 +86,9 @@ async def scrape_operator(page: Page, operator_id: int, name: str, neq: Optional
         # Wait for user to solve CAPTCHA and click search
         # The page will navigate to show results
         try:
-            await page.wait_for_navigation(timeout=120000)  # 2 minute timeout
+            # In Playwright v1.30+, wait_for_navigation() is deprecated.
+            # Wait for the page URL to change or load state to complete
+            await page.wait_for_url("**/*", timeout=120000)  # 2 minute timeout
         except Exception as e:
             print(f"   ⚠️  Navigation timeout or cancelled: {e}")
             return False

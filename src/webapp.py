@@ -549,9 +549,9 @@ def targets():
     except (ValueError, TypeError):
         min_score = 0.30
     
-    # Query top-30 independents with all scoring details
+    # Query top-30 independents with all scoring details and fleet info
     query = """
-        SELECT 
+        SELECT
             o.id,
             o.name,
             o.city,
@@ -562,9 +562,19 @@ def targets():
             COALESCE(s.independence_score, 1.0) as independence_score,
             COALESCE(s.clarity_score, 0) as clarity_score,
             COALESCE(s.ma_fit_score, 0) as fit_score,
-            COALESCE(s.rank, 0) as rank
+            COALESCE(s.rank, 0) as rank,
+            COALESCE(f.total, 0) as fleet_total,
+            COALESCE(f.buses_scolaire, 0) as buses_scolaire,
+            COALESCE(f.buses_coach, 0) as buses_coach
         FROM operators o
         LEFT JOIN scores s ON o.id = s.operator_id
+        LEFT JOIN (
+            SELECT operator_id, total, buses_scolaire, buses_coach, buses_adapte, buses_urbain
+            FROM fleet
+            WHERE id IN (
+                SELECT MAX(id) FROM fleet GROUP BY operator_id
+            )
+        ) f ON o.id = f.operator_id
         WHERE o.group_id IS NULL
           AND COALESCE(s.ma_fit_score, 0) >= ?
     """

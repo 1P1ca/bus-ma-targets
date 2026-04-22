@@ -25,6 +25,7 @@
 <nav class="tabs">
   <a href="#coordonnees">Coordonnées</a>
   <a href="#installations">Installations</a>
+  <a href="#fleet">Parc de véhicules</a>
   <a href="#permis">Permis CTQ</a>
   <a href="#actionnariat">Actionnariat</a>
   <a href="#communications">Communications ({{ comms|length }})</a>
@@ -141,6 +142,38 @@
     </div>
   {% else %}
     <p class="muted">Aucune estimation d'installation disponible.</p>
+  {% endif %}
+</section>
+
+<!-- Parc de véhicules -->
+<section id="fleet" class="card">
+  <h2>🚌 Parc de véhicules</h2>
+  {% if fleet %}
+    {% set latest_fleet = fleet[0] %}
+    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+      <div style="background: #f5f5f5; padding: 1rem; border-radius: 4px;">
+        <div style="font-size: 32px; font-weight: bold; color: #d8534a;">{{ latest_fleet['buses_scolaire'] or 0 }}</div>
+        <div style="font-size: 12px; color: #666; margin-top: 0.25rem;">Autobus scolaires</div>
+      </div>
+      <div style="background: #f5f5f5; padding: 1rem; border-radius: 4px;">
+        <div style="font-size: 32px; font-weight: bold; color: #d8534a;">{{ latest_fleet['buses_coach'] or 0 }}</div>
+        <div style="font-size: 12px; color: #666; margin-top: 0.25rem;">Autobus nolisés/interurbains</div>
+      </div>
+      <div style="background: #f5f5f5; padding: 1rem; border-radius: 4px;">
+        <div style="font-size: 32px; font-weight: bold; color: #d8534a;">{{ latest_fleet['buses_adapte'] or 0 }}</div>
+        <div style="font-size: 12px; color: #666; margin-top: 0.25rem;">Transport adapté</div>
+      </div>
+      <div style="background: #f5f5f5; padding: 1rem; border-radius: 4px;">
+        <div style="font-size: 32px; font-weight: bold; color: #d8534a;">{{ latest_fleet['buses_urbain'] or 0 }}</div>
+        <div style="font-size: 12px; color: #666; margin-top: 0.25rem;">Transport urbain</div>
+      </div>
+    </div>
+    <div style="margin-top: 1rem; padding: 0.75rem; background: #e8f4f8; border-left: 3px solid #0066cc; font-size: 14px;">
+      <strong>Total :</strong> {{ latest_fleet['total'] or 0 }} véhicules
+      <br><span style="font-size: 12px; color: #666;">Source : {{ latest_fleet['source'] }} — Mise à jour : {{ latest_fleet['as_of_date'] or '—' }}</span>
+    </div>
+  {% else %}
+    <p class="muted">Aucune donnée de parc. Les informations de flotte seront ajoutées via scraping CTQ.</p>
   {% endif %}
 </section>
 

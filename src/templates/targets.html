@@ -42,10 +42,11 @@
   <thead>
     <tr>
       <th style="width: 5%; text-align: center;">Rang</th>
-      <th style="width: 30%;">Entreprise</th>
-      <th style="width: 12%;">Ville</th>
-      <th style="width: 10%; text-align: center;">Président</th>
-      <th style="width: 35%;">Score M&A</th>
+      <th style="width: 28%;">Entreprise</th>
+      <th style="width: 10%;">Ville</th>
+      <th style="width: 8%; text-align: center;">Président</th>
+      <th style="width: 12%; text-align: center;">🚌 Parc</th>
+      <th style="width: 37%;">Score M&A</th>
     </tr>
   </thead>
   <tbody>
@@ -60,6 +61,14 @@
       </td>
       <td>{{ row['city'] }}</td>
       <td style="font-size: 12px;">{{ row['president'] or '—' }}</td>
+      <td style="font-size: 12px; text-align: center;">
+        {% if row['fleet_total'] > 0 %}
+          <strong style="color: var(--rouille); font-size: 14px;">{{ row['fleet_total'] }}</strong>
+          <br><span style="color: var(--grey-500); font-size: 10px;">{{ row['buses_scolaire'] }}🏫 {{ row['buses_coach'] }}🚌</span>
+        {% else %}
+          <span style="color: var(--grey-500);">—</span>
+        {% endif %}
+      </td>
       <td>
         <div style="display: flex; align-items: center; gap: 0.5rem;">
           <div style="flex: 1;">
