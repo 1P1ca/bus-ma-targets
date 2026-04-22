@@ -55,7 +55,7 @@
     <tr>
       <td style="text-align: center; font-weight: 600; color: var(--rouille);">{{ row['rank'] }}</td>
       <td>
-        <a href="/operateurs/{{ row['id'] }}"><strong>{{ row['name'][:45] }}</strong></a>
+        <a href="/op/{{ row['id'] }}"><strong>{{ row['name'][:45] }}</strong></a>
         {% if row['website'] %}
           <br><span class="small" style="color: var(--grey-500);">{{ row['website'][:40] }}</span>
         {% endif %}
