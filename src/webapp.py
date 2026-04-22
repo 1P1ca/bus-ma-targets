@@ -511,10 +511,20 @@ def satellite(name: str):
 # ---------------------------------------------------------------------------
 
 @app.route("/export")
+@app.route("/export_xlsx")
 def export_xlsx():
-    import export_excel
-    p = export_excel.export()
-    return send_from_directory(p.parent, p.name, as_attachment=True)
+    """Serve pre-built Excel export from output directory"""
+    xlsx_path = Path(__file__).resolve().parent.parent / "output" / "operators_ma.xlsx"
+    if xlsx_path.exists():
+        return send_from_directory(xlsx_path.parent, xlsx_path.name, as_attachment=True)
+    else:
+        # Fallback: try to generate it
+        try:
+            import export_excel
+            p = export_excel.export()
+            return send_from_directory(p.parent, p.name, as_attachment=True)
+        except Exception as e:
+            abort(500)
 
 
 # ---------------------------------------------------------------------------
