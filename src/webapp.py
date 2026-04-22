@@ -202,6 +202,11 @@ def index():
 # Fiche entreprise
 # ---------------------------------------------------------------------------
 
+@app.route("/operateurs/<int:op_id>")
+def operateurs_redirect(op_id: int):
+    """Redirect from old /operateurs/ URL to new /op/ URL"""
+    return redirect(url_for('op_detail', op_id=op_id))
+
 @app.route("/op/<int:op_id>")
 def op_detail(op_id: int):
     db = get_db()
