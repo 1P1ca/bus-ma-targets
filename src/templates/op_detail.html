@@ -113,35 +113,16 @@
 
 <!-- Installations -->
 <section id="installations" class="card">
-  <h2>Installations (estimation satellite)</h2>
-  {% if facility %}
-    <div class="grid2">
-      <div>
-        <dl class="kv">
-          <dt>Latitude / Longitude</dt>
-          <dd>{{ op['lat'] }}, {{ op['lng'] }}</dd>
-          <dt>Surface de stationnement (estimée)</dt>
-          <dd>{{ '%d' % (facility['parking_area_m2'] or 0) }} m²</dd>
-          <dt>Surface de bâtiment (estimée)</dt>
-          <dd>{{ '%d' % (facility['building_area_m2'] or 0) }} m²</dd>
-          <dt>Capacité estimée (autobus)</dt>
-          <dd>{{ facility['bus_capacity_est'] or '—' }}</dd>
-          <dt>Méthode</dt>
-          <dd>{{ facility['estimation_method'] }} (confiance {{ facility['confidence'] }})</dd>
-        </dl>
-      </div>
-      <div>
-        {% if facility['satellite_image_path'] %}
-          <img id="satImg" class="sat" src="{{ url_for('satellite', name=facility['satellite_image_path'].split('/')[-1]) }}"
-               alt="Image satellite" onclick="openSatelliteModal()">
-          <p class="muted small" style="margin-top: 4px; cursor: help;">Cliquer pour agrandir</p>
-        {% else %}
-          <p class="muted">Aucune image.</p>
-        {% endif %}
-      </div>
-    </div>
+  <h2>Localisation</h2>
+  {% if op['lat'] and op['lng'] %}
+    <dl class="kv">
+      <dt>Latitude / Longitude</dt>
+      <dd>{{ op['lat'] }}, {{ op['lng'] }}</dd>
+      <dt>Coordonnées</dt>
+      <dd><a href="https://maps.google.com/?q={{ op['lat'] }},{{ op['lng'] }}" target="_blank">Voir sur Google Maps ↗</a></dd>
+    </dl>
   {% else %}
-    <p class="muted">Aucune estimation d'installation disponible.</p>
+    <p class="muted">Coordonnées géographiques non disponibles.</p>
   {% endif %}
 </section>
 
